@@ -2,6 +2,9 @@
 - starting project and make first base.
 27/08/2022 -> version 0.2
 -create difficulty for game (easy, medium, hard)
+27/08/2022 -> version 0.5
 -create a function playing_game(add,delete) - this function reduce some lines of code
 -create difficulty 'custom', where you can select pool, win score, lose score (for a moment, no hints)
+27/08/2022 -> version 0.51
+-reduce code lines, function playing_game updated!
 
