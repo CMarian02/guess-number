@@ -1,2 +1,4 @@
 26/08/2022 
 - starting project and make first base.
+27/08/2022
+-create difficulty for game
