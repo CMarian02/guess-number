@@ -1,4 +1,4 @@
-# Guessing Game V0.2 2022 - Python by CMarian
+# Guessing Game V0.21 2022 - Python by CMarian
 from random import randint
 
 print('Hello, welcome to Guess Number v0.1!')
