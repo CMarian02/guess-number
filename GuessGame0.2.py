@@ -1,7 +1,7 @@
 # Guessing Game V0.251 2022 - Python by CMarian
 from random import randint
 
-def playing_game(add, delete, start, stop):
+def playing_game(add, delete, start, stop, hints = 'no'):
     nickname = input('Insert your nickname(for indexing in .txt file, in next version indexing in dtb file):')
     print(f'Welcome {nickname}, you can start play now!')
     score = 0
@@ -26,7 +26,7 @@ def playing_game(add, delete, start, stop):
                     file.close()
             else:
                 score -=delete
-                if difficulty == 3:
+                if difficulty == 3 or hints.lower() == 'yes':
                     if computer_number < player_number:
                         gap = player_number - computer_number
                     else:
@@ -61,9 +61,10 @@ while difficulty_select == True:
         pool_stop = int(input('Insert stop pool:'))
         score_win = int(input('Insert win score:'))
         score_lose = int(input('Insert lose score:'))
+        hints = input('You want hints?(yes/no):')
         difficulty_select = False
         print(f'Number pool is {pool_start} - {pool_stop}! For every number guees you gain {score_win} score, and for a miss you lose {score_lose} score!')
-        playing_game(score_win,score_lose,pool_start,pool_stop)
+        playing_game(score_win,score_lose,pool_start,pool_stop,hints)
     else:
         print('No difficulty! Please try again')
         difficulty_select = True
