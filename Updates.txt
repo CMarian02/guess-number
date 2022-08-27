@@ -2,3 +2,7 @@
 - starting project and make first base.
 27/08/2022 -> version 0.2
 -create difficulty for game (easy, medium, hard)
+<<<<<<< HEAD
+=======
+-create a function playing_game(add,delete) - this function reduce some lines of code
+>>>>>>> dev
