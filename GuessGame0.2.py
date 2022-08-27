@@ -34,10 +34,10 @@ def playing_game(add, delete, start, stop):
                     score -=7
                     if gap > 25:
                         print('Too far, you are about 25+ positions away!')
-                print(f'Noo! You can try again!')
+                print(f'Noo! You can try again!\n')
                 print(f'Actual score: {score}')
 
-print('Hello, welcome to Guess Number v0.1!')
+print('Hello, welcome to Guess Number v0.51!')
 difficulty_select = True
 while difficulty_select == True:
     difficulty = int(input('You can select dificulty:\n1-Easy\n2-Medium\n3-Hard\n4-Custom'))
