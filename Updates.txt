@@ -7,4 +7,8 @@
 -create difficulty 'custom', where you can select pool, win score, lose score (for a moment, no hints -> hints done 28/08/2022 -> version 0.253)
 27/08/2022 -> version 0.251
 -reduce code lines, function playing_game updated!
-
+30/08/2022 -> version 1.0
+-GUI created for game
+-difficulty deleted for a momment, in next updates this future has been improved
+-folder for DataBase
+-folder for Images
