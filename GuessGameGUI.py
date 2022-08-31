@@ -1,4 +1,3 @@
-from msvcrt import kbhit
 import tkinter as tk
 from PIL import ImageTk, Image
 from tkinter.font import BOLD
@@ -14,13 +13,13 @@ root.rowconfigure(0, weight = 1)
 root.columnconfigure(0, weight = 1)
 favicon = ImageTk.PhotoImage(Image.open("img/favicon.png"))
 root.iconphoto(False, favicon)
+
 #Create variables
 score = 0
 k = 0
 computer_number = randint(0,5)
 
 #Create Functions
-
 def switch_page(page):
     global player_nickname
     player_nickname = entry_nickname.get()
@@ -31,7 +30,6 @@ def switch_page(page):
         wrong_nickname.pack(pady = 10, padx = 5)
         wrong_nickname.after(2000, lambda:wrong_nickname.pack_forget())
             
-   
 def guess():
     global computer_number
     global score
@@ -90,7 +88,6 @@ button_nickname = tk.Button(start_page, width = 20, text = "Play", cursor = "han
 button_nickname.pack(padx = 10, pady = 5)
 
 #Main Page Setup
-
 label_welcome = tk.Label(main_page, text = "Welcome to GuessNumber", bg = "#05051e", fg = "#a2a6c6", font = ('Helvetica', 18, BOLD))
 label_welcome.pack(padx = 10, pady = 15)
 frame2_logo = tk.Frame(main_page, width = 250, height = 250)
