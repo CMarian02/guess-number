@@ -20,3 +20,6 @@
 -messagebox added when you want to quit fast app
 -font changed
 -cursor modifed on last_page
+31/08/2022 -> version 1.2
+-difficulty added (all, inclusive custom)
+-some new function
