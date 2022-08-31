@@ -12,3 +12,11 @@
 -difficulty deleted for a momment, in next updates this future has been improved
 -folder for DataBase
 -folder for Images
+31/08/2022 -> version 1.1
+-translate some lines
+-theme changed
+-icon added
+-bug fix wrong_number, and add future -> .after function
+-messagebox added when you want to quit fast app
+-font changed
+-cursor modifed on last_page
