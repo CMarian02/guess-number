@@ -1,3 +1,1 @@
-CMarian 20
-1234 20
-Romania -35
+CMarian 95
