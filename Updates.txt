@@ -23,9 +23,14 @@
 31/08/2022 -> version 1.2
 -difficulty added (all, inclusive custom)
 -some new function
-01/08/2022 > version 1.5
+01/09/2022 > version 1.5
 -can use 'enter' key to guess a number.
 -when you leave pool numbers you get a error message
 -new button for future leaderboard
 -added label with 'actual score' in main_page and 'your score:" in last_page
 -now you can't enter startpool higher than stoppool
+03/09/2022 -> version 2.0
+-some bug fixed
+-leaderboard created
+-when you are hard difficulty, you try to insert a number when 25 positions away he get a message error
+-create .exe app ( no github up )
