@@ -1,8 +1,9 @@
+import sqlite3
 import tkinter as tk
 from PIL import ImageTk, Image
 from tkinter.font import BOLD
 from random import randint
-from tkinter import DISABLED, messagebox
+from tkinter import END, messagebox
 
 #Set root window
 root = tk.Tk()
@@ -71,7 +72,7 @@ def guess():
 def continue_playing():
     global computer_number
     label_lscore.pack_forget()
-    entry_number.delete(0)
+    entry_number.delete(0, END)
     root.bind('<Return>', validating)
     switch_page(main_page)
     if difficulty == 0:
@@ -84,9 +85,13 @@ def continue_playing():
         randing_number(startpool, stoppool)
 
 def write_db():
-    with open("data/DataBase.txt", "a") as f:
-        f.write(f"{player_nickname} {score}\n")
-        f.close()
+    connection = sqlite3.connect('data/players.db')
+    cursor = connection.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS rankings
+                        (nickname text, score integer)''')
+    cursor.execute("INSERT INTO rankings (nickname, score) VALUES (?,?)", (player_nickname, score))
+    connection.commit()
+    connection.close()
 
 def on_closing():
     if messagebox.askyesno(title = "Quit?", message = "Do you really want to quit?Progress will not be saved"):
@@ -98,6 +103,7 @@ def change_easy():
     switch_page(main_page)
     messagebox.showinfo("Easy Difficulty", "Pool number: 0 - 5\nWhen you win +20 score\nWhen you lose -5 score!")
     difficulty = 0   
+    randing_number(0,5)
 
 def change_medium():
     global difficulty
@@ -105,6 +111,7 @@ def change_medium():
     switch_page(main_page)
     messagebox.showinfo("Easy Difficulty", "Pool number: 0 - 50\nWhen you win +100 score\nWhen you lose -20 score!")
     difficulty = 1
+    randing_number(0,50)
     
 def change_hard():
     global difficulty
@@ -112,6 +119,7 @@ def change_hard():
     switch_page(main_page)
     messagebox.showinfo("Easy Difficulty", "Pool number: 0 - 100\nWhen you win +300 score\nWhen you lose -11 score!")
     difficulty = 2
+    randing_number(0,100)
 
 def change_custom():
     global difficulty
@@ -131,7 +139,16 @@ def send_info():
 def validating(event):
     if entry_number.get().isdigit() == True:
         if int(entry_number.get()) <= validstop and int(entry_number.get()) >= validstart:
-            guess()
+            if difficulty == 2:
+                check_gap()
+                if gap > 25:
+                    wrong_gap = tk.Label(main_page, text = "You are 25 position away!", bg = "#05051e", fg = "darkred", font = ('Helvetica', 12, BOLD))
+                    wrong_gap.pack(pady = (10,5), padx = 10)
+                    wrong_gap.after(1500, lambda:wrong_gap.pack_forget())
+                else:
+                    guess()
+            else:
+                guess()
         else:
             messagebox.showerror('Error', "You left the pool!")
     else:
@@ -147,6 +164,59 @@ def validate_settings():
     else:
         messagebox.showerror('Error', "You enter a startpool higher number than stoppool!")
 
+def check_gap():
+    global gap
+    if computer_number < int(entry_number.get()):
+        gap = int(entry_number.get()) - computer_number
+    else:
+        gap = computer_number - int(entry_number.get())
+
+def check_places():
+    global first_scr, second_scr, third_scr
+    global first_nickname, second_nickname, third_nickname
+    global switch_case
+    connection = sqlite3.connect('data/players.db')
+    cursor = connection.cursor()
+    players = []
+    scores = []
+    for player in cursor.execute('select nickname from rankings'):
+        players.append(player)
+    for scr in cursor.execute('select score from rankings'):
+        scores.append(scr)
+    #get maximum values
+    first_scr = max(scores)
+    first_ind = scores.index(first_scr)
+    first_nickname = players[first_ind]
+    players.pop(first_ind)
+    scores.pop(first_ind)
+    second_scr = max(scores)
+    second_ind = scores.index(second_scr)
+    second_nickname = players[second_ind]
+    players.pop(second_ind)
+    scores.pop(second_ind)
+    third_scr = max(scores)
+    third_ind = scores.index(third_scr)
+    third_nickname = players[third_ind]
+    players.pop(third_ind)
+    scores.pop(third_ind)
+
+def create_lead():
+    first_place = tk.Label(lead_page, text = '1st Place', font = ('Helvetica', 18, BOLD), bg = "#05051e", fg = "#ff9900")
+    first_place.pack(pady = 5)
+    first_player = tk.Label(lead_page, text = f"{first_nickname[0]}  {first_scr[0]}", bg = "#05051e", fg = "#ff8000", font = ('Helvetica', 12, BOLD))
+    first_player.pack(pady = 5)
+    second_place = tk.Label(lead_page, text = '2nd Place', font = ('Helvetica', 18, BOLD), bg = "#05051e", fg = "#e68a00")
+    second_place.pack(pady = 5)
+    second_player = tk.Label(lead_page, text = f"{second_nickname[0]}  {second_scr[0]}", bg = "#05051e", fg = "#e67300", font = ('Helvetica', 12, BOLD))
+    second_player.pack(pady = 5)
+    third_place = tk.Label(lead_page, text = '3rd Place', font = ('Helvetica', 18, BOLD), bg = "#05051e", fg = "#cc7a00")
+    third_place.pack(pady = 5)
+    third_player = tk.Label(lead_page, text = f"{third_nickname[0]}  {third_scr[0]}", bg = "#05051e", fg = "#cc6600", font = ('Helvetica', 12, BOLD))
+    third_player.pack(pady = 5)
+    button_quit = tk.Button(lead_page, width = 20, text = "Quit", command = lambda:root.destroy(), cursor = "hand2", font = ('Helvetica', 14, BOLD), bd = 1, bg = "#b30047", fg = "white")
+    button_quit.pack(pady = (20,0))
+    root.protocol("WM_DELETE_WINDOW", lambda:root.destroy())
+    
 #Pages Setup
 start_page = tk.Frame(root, height = 500, width = 500, bg = "#05051e")
 main_page = tk.Frame(root, height = 500, width = 500, bg = "#05051e")
@@ -162,7 +232,6 @@ last_page.grid(row = 0, column = 0 , sticky = "nsew")
 lead_page.grid(row = 0, column = 0 , sticky = "nsew")
 root.protocol("WM_DELETE_WINDOW", lambda:on_closing())
 start_page.tkraise()
-randing_number(0,5)
 
 # Start Page Setup
 label_welcome = tk.Label(start_page, text = "Welcome to GuessNumber", bg = "#05051e", fg = "#a2a6c6", font = ('Helvetica', 18, BOLD))
@@ -198,13 +267,13 @@ label_welcome = tk.Label(diff_page, text = "Welcome to GuessNumber", bg = "#0505
 label_welcome.pack(padx = 10, pady = 15)
 label_diff = tk.Label(diff_page, text = "Please choose difficulty", bg = "#05051e", fg = "#a2a6c6", font = ('Helvetica', 15, BOLD) )
 label_diff.pack(padx = 10, pady = (10,30))
-easy_diffbtn = tk.Button(diff_page, width = 25, height = 2, text = "Easy",command = lambda:change_easy(), cursor = "hand2", font = ('Helvetica', 14, BOLD), bd = 0, fg = "white", bg = "#20852D")
+easy_diffbtn = tk.Button(diff_page, width = 25, height = 2, text = "Easy",command = lambda:change_easy(), cursor = "hand2", font = ('Helvetica', 14, BOLD), bd = 0, fg = "white", bg = "#86b300")
 easy_diffbtn.pack(padx = 10, pady = (60,0))
-medium_diffbtn = tk.Button(diff_page, width = 25, height = 2, text = "Medium", command = lambda:change_medium(), cursor = "hand2", font = ('Helvetica', 14, BOLD), bd = 0, fg = "white", bg = "#FFC300")
+medium_diffbtn = tk.Button(diff_page, width = 25, height = 2, text = "Medium", command = lambda:change_medium(), cursor = "hand2", font = ('Helvetica', 14, BOLD), bd = 0, fg = "white", bg = "#cc6600")
 medium_diffbtn.pack(padx = 10)
-hard_diffbtn = tk.Button(diff_page, width = 25, height = 2, text = "Hard", command = lambda:change_hard(), cursor = "hand2", font = ('Helvetica', 14, BOLD), bd = 0, fg = "white", bg = "#9D3737")
+hard_diffbtn = tk.Button(diff_page, width = 25, height = 2, text = "Hard", command = lambda:change_hard(), cursor = "hand2", font = ('Helvetica', 14, BOLD), bd = 0, fg = "white", bg = "#b30000")
 hard_diffbtn.pack(padx = 10)
-custom_diffbtn = tk.Button(diff_page, width = 25, height = 2, text = "Custom", font = ('Helvetica', 14, BOLD),command = lambda:[switch_page(custom_page), change_custom()], bd = 0, fg = "white", bg = "#9D378C")
+custom_diffbtn = tk.Button(diff_page, width = 25, height = 2, text = "Custom", font = ('Helvetica', 14, BOLD),command = lambda:[switch_page(custom_page), change_custom()], bd = 0, fg = "white", bg = "#2d2d86")
 custom_diffbtn.pack(padx = 10, pady = (0,20))
 
 #Custom Page Setup
@@ -241,7 +310,7 @@ button_continue = tk.Button(last_page, width = 20, text = "Continue", command = 
 button_continue.pack(padx = 10, pady = (20,0))
 button_quit = tk.Button(last_page, width = 20, text = "Quit", command = lambda:[write_db(),root.destroy()], cursor = "hand2", font = ('Helvetica', 14, BOLD), bd = 1, bg = "#b30047", fg = "white")
 button_quit.pack(padx = 10)
-button_lead = tk.Button(last_page, width = 20, text = "Leaderboard",state = DISABLED, command = lambda:switch_page(lead_page), cursor = "hand2", fg = "white", font = ('Helvetica', 14, BOLD), bd = 1, bg = "darkred")
+button_lead = tk.Button(last_page, width = 20, text = "Leaderboard",  command = lambda:[write_db(), switch_page(lead_page), check_places(), create_lead()], cursor = "hand2", fg = "white", font = ('Helvetica', 14, BOLD), bd = 1, bg = "darkred")
 button_lead.pack(padx = 10)
 
 #LeaderBoard Page
