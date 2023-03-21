@@ -12,5 +12,5 @@
 <h3 align = "center">[🚩]The known issues are:[🚩]</h3>
 <p align = "center"> I have not been able to find any problems, so far, small problems with the positioning of the texts in the pages, but I don't really consider them problems. </p>
 <h3 align = "center">[🎬]Presentation video:[🎬]</h3>
-<p align = "center">https://www.youtube.com/watch?v=qg8RHH8A_ME</p>
+<p align = "center">https://youtu.be/9s4lrDvLZf4</p>
 <h2 align = "center">[✨]The project is considered completed.[✨]<h2>
